@@ -23,13 +23,6 @@
 
 package cgroups
 
-import (
-	"bufio"
-	"os"
-	"strconv"
-	"strings"
-)
-
 const (
 	_cgroupSep       = ":"
 	_cgroupSubsysSep = ","
@@ -53,51 +46,13 @@ type CGroupSubsys struct {
 // NewCGroupSubsysFromLine returns a new *CGroupSubsys by parsing a string in
 // the format of `/proc/$PID/cgroup`
 func NewCGroupSubsysFromLine(line string) (*CGroupSubsys, error) {
-	fields := strings.SplitN(line, _cgroupSep, _csFieldCount)
-
-	if len(fields) != _csFieldCount {
-		return nil, cgroupSubsysFormatInvalidError{line}
-	}
-
-	id, err := strconv.Atoi(fields[_csFieldIDID])
-	if err != nil {
-		return nil, err
-	}
-
-	cgroup := &CGroupSubsys{
-		ID:         id,
-		Subsystems: strings.Split(fields[_csFieldIDSubsystems], _cgroupSubsysSep),
-		Name:       fields[_csFieldIDName],
-	}
-
-	return cgroup, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }
 
 // parseCGroupSubsystems parses procPathCGroup (usually at `/proc/$PID/cgroup`)
 // and returns a new map[string]*CGroupSubsys.
 func parseCGroupSubsystems(procPathCGroup string) (map[string]*CGroupSubsys, error) {
-	cgroupFile, err := os.Open(procPathCGroup)
-	if err != nil {
-		return nil, err
-	}
-	defer cgroupFile.Close()
-
-	scanner := bufio.NewScanner(cgroupFile)
-	subsystems := make(map[string]*CGroupSubsys)
-
-	for scanner.Scan() {
-		cgroup, err := NewCGroupSubsysFromLine(scanner.Text())
-		if err != nil {
-			return nil, err
-		}
-		for _, subsys := range cgroup.Subsystems {
-			subsystems[subsys] = cgroup
-		}
-	}
-
-	if err := scanner.Err(); err != nil {
-		return nil, err
-	}
-
-	return subsystems, nil
+	_ = "STUB: not implemented"
+	return nil, nil
 }

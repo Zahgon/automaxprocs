@@ -56,63 +56,21 @@ type CGroups map[string]*CGroup
 // under for some process under `/proc` file system (see also proc(5) for more
 // information).
 func NewCGroups(procPathMountInfo, procPathCGroup string) (CGroups, error) {
-	cgroupSubsystems, err := parseCGroupSubsystems(procPathCGroup)
-	if err != nil {
-		return nil, err
-	}
-
-	cgroups := make(CGroups)
-	newMountPoint := func(mp *MountPoint) error {
-		if mp.FSType != _cgroupFSType {
-			return nil
-		}
-
-		for _, opt := range mp.SuperOptions {
-			subsys, exists := cgroupSubsystems[opt]
-			if !exists {
-				continue
-			}
-
-			cgroupPath, err := mp.Translate(subsys.Name)
-			if err != nil {
-				return err
-			}
-			cgroups[opt] = NewCGroup(cgroupPath)
-		}
-
-		return nil
-	}
-
-	if err := parseMountInfo(procPathMountInfo, newMountPoint); err != nil {
-		return nil, err
-	}
-	return cgroups, nil
+	_ = "STUB: not implemented"
+	return *new(CGroups), nil
 }
 
 // NewCGroupsForCurrentProcess returns a new *CGroups instance for the current
 // process.
 func NewCGroupsForCurrentProcess() (CGroups, error) {
-	return NewCGroups(_procPathMountInfo, _procPathCGroup)
+	_ = "STUB: not implemented"
+	return *new(CGroups), nil
 }
 
 // CPUQuota returns the CPU quota applied with the CPU cgroup controller.
 // It is a result of `cpu.cfs_quota_us / cpu.cfs_period_us`. If the value of
 // `cpu.cfs_quota_us` was not set (-1), the method returns `(-1, nil)`.
 func (cg CGroups) CPUQuota() (float64, bool, error) {
-	cpuCGroup, exists := cg[_cgroupSubsysCPU]
-	if !exists {
-		return -1, false, nil
-	}
-
-	cfsQuotaUs, err := cpuCGroup.readInt(_cgroupCPUCFSQuotaUsParam)
-	if defined := cfsQuotaUs > 0; err != nil || !defined {
-		return -1, defined, err
-	}
-
-	cfsPeriodUs, err := cpuCGroup.readInt(_cgroupCPUCFSPeriodUsParam)
-	if defined := cfsPeriodUs > 0; err != nil || !defined {
-		return -1, defined, err
-	}
-
-	return float64(cfsQuotaUs) / float64(cfsPeriodUs), true, nil
+	_ = "STUB: not implemented"
+	return 0, false, nil
 }

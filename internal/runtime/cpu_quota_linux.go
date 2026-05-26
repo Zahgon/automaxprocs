@@ -24,8 +24,6 @@
 package runtime
 
 import (
-	"errors"
-
 	cg "go.uber.org/automaxprocs/internal/cgroups"
 )
 
@@ -33,24 +31,8 @@ import (
 // to a valid GOMAXPROCS value. The quota is converted from float to int using round.
 // If round == nil, DefaultRoundFunc is used.
 func CPUQuotaToGOMAXPROCS(minValue int, round func(v float64) int) (int, CPUQuotaStatus, error) {
-	if round == nil {
-		round = DefaultRoundFunc
-	}
-	cgroups, err := _newQueryer()
-	if err != nil {
-		return -1, CPUQuotaUndefined, err
-	}
-
-	quota, defined, err := cgroups.CPUQuota()
-	if !defined || err != nil {
-		return -1, CPUQuotaUndefined, err
-	}
-
-	maxProcs := round(quota)
-	if minValue > 0 && maxProcs < minValue {
-		return minValue, CPUQuotaMinUsed, nil
-	}
-	return maxProcs, CPUQuotaUsed, nil
+	_ = "STUB: not implemented"
+	return 0, *new(CPUQuotaStatus), nil
 }
 
 type queryer interface {
@@ -63,13 +45,4 @@ var (
 	_newQueryer  = newQueryer
 )
 
-func newQueryer() (queryer, error) {
-	cgroups, err := _newCgroups2()
-	if err == nil {
-		return cgroups, nil
-	}
-	if errors.Is(err, cg.ErrNotV2) {
-		return _newCgroups()
-	}
-	return nil, err
-}
+func newQueryer() (queryer, error) { _ = "STUB: not implemented"; return *new(queryer), nil }

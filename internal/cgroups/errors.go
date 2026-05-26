@@ -23,8 +23,6 @@
 
 package cgroups
 
-import "fmt"
-
 type cgroupSubsysFormatInvalidError struct {
 	line string
 }
@@ -39,14 +37,8 @@ type pathNotExposedFromMountPointError struct {
 	path       string
 }
 
-func (err cgroupSubsysFormatInvalidError) Error() string {
-	return fmt.Sprintf("invalid format for CGroupSubsys: %q", err.line)
-}
+func (err cgroupSubsysFormatInvalidError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (err mountPointFormatInvalidError) Error() string {
-	return fmt.Sprintf("invalid format for MountPoint: %q", err.line)
-}
+func (err mountPointFormatInvalidError) Error() string { _ = "STUB: not implemented"; return "" }
 
-func (err pathNotExposedFromMountPointError) Error() string {
-	return fmt.Sprintf("path %q is not a descendant of mount point root %q and cannot be exposed from %q", err.path, err.root, err.mountPoint)
-}
+func (err pathNotExposedFromMountPointError) Error() string { _ = "STUB: not implemented"; return "" }

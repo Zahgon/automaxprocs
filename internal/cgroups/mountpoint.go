@@ -23,14 +23,6 @@
 
 package cgroups
 
-import (
-	"bufio"
-	"os"
-	"path/filepath"
-	"strconv"
-	"strings"
-)
-
 const (
 	_mountInfoSep               = " "
 	_mountInfoOptsSep           = ","
@@ -77,95 +69,25 @@ type MountPoint struct {
 // NewMountPointFromLine parses a line read from `/proc/$PID/mountinfo` and
 // returns a new *MountPoint.
 func NewMountPointFromLine(line string) (*MountPoint, error) {
-	fields := strings.Split(line, _mountInfoSep)
-
-	if len(fields) < _miFieldCountMin {
-		return nil, mountPointFormatInvalidError{line}
-	}
-
-	mountID, err := strconv.Atoi(fields[_miFieldIDMountID])
-	if err != nil {
-		return nil, err
-	}
-
-	parentID, err := strconv.Atoi(fields[_miFieldIDParentID])
-	if err != nil {
-		return nil, err
-	}
-
-	for i, field := range fields[_miFieldIDOptionalFields:] {
-		if field == _mountInfoOptionalFieldsSep {
-			// End of optional fields.
-			fsTypeStart := _miFieldIDOptionalFields + i + 1
-
-			// Now we know where the optional fields end, split the line again with a
-			// limit to avoid issues with spaces in super options as present on WSL.
-			fields = strings.SplitN(line, _mountInfoSep, fsTypeStart+_miFieldCountSecondHalf)
-			if len(fields) != fsTypeStart+_miFieldCountSecondHalf {
-				return nil, mountPointFormatInvalidError{line}
-			}
-
-			miFieldIDFSType := _miFieldOffsetFSType + fsTypeStart
-			miFieldIDMountSource := _miFieldOffsetMountSource + fsTypeStart
-			miFieldIDSuperOptions := _miFieldOffsetSuperOptions + fsTypeStart
-
-			return &MountPoint{
-				MountID:        mountID,
-				ParentID:       parentID,
-				DeviceID:       fields[_miFieldIDDeviceID],
-				Root:           fields[_miFieldIDRoot],
-				MountPoint:     fields[_miFieldIDMountPoint],
-				Options:        strings.Split(fields[_miFieldIDOptions], _mountInfoOptsSep),
-				OptionalFields: fields[_miFieldIDOptionalFields:(fsTypeStart - 1)],
-				FSType:         fields[miFieldIDFSType],
-				MountSource:    fields[miFieldIDMountSource],
-				SuperOptions:   strings.Split(fields[miFieldIDSuperOptions], _mountInfoOptsSep),
-			}, nil
-		}
-	}
-
-	return nil, mountPointFormatInvalidError{line}
+	_ = "STUB: not implemented"
+	return nil, nil
 }
+
+// End of optional fields.
+
+// Now we know where the optional fields end, split the line again with a
+// limit to avoid issues with spaces in super options as present on WSL.
 
 // Translate converts an absolute path inside the *MountPoint's file system to
 // the host file system path in the mount namespace the *MountPoint belongs to.
 func (mp *MountPoint) Translate(absPath string) (string, error) {
-	relPath, err := filepath.Rel(mp.Root, absPath)
-
-	if err != nil {
-		return "", err
-	}
-	if relPath == ".." || strings.HasPrefix(relPath, "../") {
-		return "", pathNotExposedFromMountPointError{
-			mountPoint: mp.MountPoint,
-			root:       mp.Root,
-			path:       absPath,
-		}
-	}
-
-	return filepath.Join(mp.MountPoint, relPath), nil
+	_ = "STUB: not implemented"
+	return "", nil
 }
 
 // parseMountInfo parses procPathMountInfo (usually at `/proc/$PID/mountinfo`)
 // and yields parsed *MountPoint into newMountPoint.
 func parseMountInfo(procPathMountInfo string, newMountPoint func(*MountPoint) error) error {
-	mountInfoFile, err := os.Open(procPathMountInfo)
-	if err != nil {
-		return err
-	}
-	defer mountInfoFile.Close()
-
-	scanner := bufio.NewScanner(mountInfoFile)
-
-	for scanner.Scan() {
-		mountPoint, err := NewMountPointFromLine(scanner.Text())
-		if err != nil {
-			return err
-		}
-		if err := newMountPoint(mountPoint); err != nil {
-			return err
-		}
-	}
-
-	return scanner.Err()
+	_ = "STUB: not implemented"
+	return nil
 }
